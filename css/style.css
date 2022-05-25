@@ -1,0 +1,41 @@
+h1{
+    background-color: yellow;
+    text-align: center;
+}
+
+.container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 10px;
+}
+
+img{
+    height: 250px;
+    width: 300px;
+}
+
+.card{
+    padding: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border: 1px solid #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
+
+.carrito{
+    font-size: 35px;
+    text-align: center;
+}
+
+.lineaCarrito{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-content: flex-start;
+    align-items: center;
+}
