@@ -260,7 +260,7 @@
 
 
 
-
+let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 
 
 class Hamburguesa {
@@ -275,35 +275,85 @@ class Hamburguesa {
 }
 
 
-const sea = new Hamburguesa (`Sea`, 30, 1, `Pan, 2 carnes, lechuga y tomate`, `./img/hamburguesaSea.png`)
-const air = new Hamburguesa (`Air`, 15, 2,`Pan, 3 carnes, Cheddar y panceta`, `./img/hamburguesaAir.png`)
-const fire = new Hamburguesa (`Fire`, 12, 3, `Pan, 1 carne, Jamon queso y huevo`, `./img/hamburguesaFire.png`)
-const ground = new Hamburguesa (`Ground`, 10, 4, `Pan, 2 carnes, Cebolla y Cheddar`, `./img/hamburguesaGround.png`)
+const sea = new Hamburguesa (`Sea`, 300, 1, `Pan, 2 carnes, lechuga y tomate`, `./img/hamburguesaSea.png`)
+const air = new Hamburguesa (`Air`, 500, 2,`Pan, 3 carnes, Cheddar y panceta`, `./img/hamburguesaAir.png`)
+const fire = new Hamburguesa (`Fire`, 250, 3, `Pan, 1 carne, Jamon queso y huevo`, `./img/hamburguesaFire.png`)
+const ground = new Hamburguesa (`Ground`, 300, 4, `Pan, 2 carnes, Cebolla y Cheddar`, `./img/hamburguesaGround.png`)
 
 const hamburguesas = [sea, air, fire, ground]
 
 const divContenedor = document.querySelector(`.container`)
+const divCarrito = document.querySelector(`.contenidoCarrito `)
+
+
 
 const mostrarBurguers = () =>{
-    hamburguesas.forEach(element => {
+    hamburguesas.forEach((element) => {
         divContenedor.innerHTML += `<div class="card"><img class="imagen" src=${element.img}>
         <p class="name">${element.nombre}</p>
         <p>Ingredientes: ${element.ingredientes}</p>
         <p class="price">Precio: $${element.precio}</p>
         <div> 
-        <button class="botonAgregar">Agregar al pedido</button>
+        <button id="btn${element.id}">Agregar al pedido</button>
         </div>
         </div>`
-    })
-    
+    });
+
+    hamburguesas.forEach((burguer) => {
+        document.querySelector(`#btn${burguer.id}`).addEventListener(`click`, () => {
+            enviarAlCarrito(burguer);
+        });
+    });
 }
 
 mostrarBurguers()
 
 
+function enviarAlCarrito(burguer){
+    let existe = carrito.some((element) => element.id === burguer.id);
+    if(!existe){
+        burguer.cantidad = 1;
+        carrito.push(burguer);
+    }else{
+        burguer.cantidad ++;
+    }
+    pintarCarrito();
+
+}
+
+function pintarCarrito() {
+    divCarrito.innerHTML = "";
+    carrito.forEach((element)=>{
+        divCarrito.innerHTML += `<div class="card"><img class="imagenCarrito" src=${element.img}>
+        <p class="name">${element.nombre}</p>
+        <p>Ingredientes: ${element.ingredientes}</p>
+        <p class="price">Precio: $${element.precio}</p>
+        <p>Cantidad: ${element.cantidad}</p>
+        <button id="borrar${element.id}">Quitar</button>
+        </div>
+        
+        `
+    });
+    localStorage.setItem("carrito", JSON.stringify(carrito))
+    borrarItemDelCarrito();
+}
 
 
-const botonAgregar = document.querySelectorAll(`.botonAgregar`)
+function borrarItemDelCarrito() {
+    carrito.forEach((burguer) => {
+        document.querySelector(`#borrar${burguer.id}`).addEventListener(`click`, () =>{
+            carrito = carrito.filter((element) => element.id !== burguer.id);
+            if(burguer.cantidad > 1){
+                burguer.cantidad --;
+            }else{
+                pintarCarrito()
+            }
+        });
+    })
+}
+    
+
+const botonAgregar = document.querySelectorAll(`#btn${hamburguesas.id}`)
 
 botonAgregar.forEach(botonAgregarCarrito => {
     botonAgregarCarrito.addEventListener(`click`, botonAgregarClicked)
@@ -318,25 +368,13 @@ function botonAgregarClicked(event) {
     const itemImg = item.querySelector(`.imagen`).src;
     
     AgregarItemAlCarrito(itemNombre, itemPrecio, itemImg)
-    
+ 
 }
 
-const lineaCarrito = document.querySelector(`.lineaCarrito`)
 
-function AgregarItemAlCarrito(itemNombre, itemPrecio, itemImg) {
-    const filaCarrito =  document.createElement(`div`);
-    const filaCarritoContenido = `
-    <div>
-        <img src="${itemImg}" alt="">
-        <h6>${itemNombre}</h6>
-    </div>
-    <div>
-        <p>${itemPrecio}</p>
-    </div>
-    `;
+pintarCarrito();
 
-    filaCarrito.innerHTML = filaCarritoContenido;
-    lineaCarrito.appendChild(filaCarrito)
-}
 
-// estaasdfasdf
+
+
+

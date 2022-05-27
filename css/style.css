@@ -26,16 +26,21 @@ img{
     
 }
 
-.carrito{
+.tituloCarrito{
     font-size: 35px;
     text-align: center;
 }
 
-.lineaCarrito{
+.contenidoCarrito{
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
     align-content: flex-start;
     align-items: center;
+}
+
+.imagenCarrito{
+    height: 80px;
+    width: 100px;
 }
